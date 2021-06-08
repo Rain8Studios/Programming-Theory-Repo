@@ -7,8 +7,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public string CurrentName;
-    public string BestScoreName;
+    public string CurrentName = "Default Bob";
+    public string BestScoreName = "Default Bob";
     public int BestScore;
 
     private void Awake()
