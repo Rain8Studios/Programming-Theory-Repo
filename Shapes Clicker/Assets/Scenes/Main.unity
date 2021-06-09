@@ -1714,7 +1714,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e9e051abd25f5146aabdd87334e1a79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: 0
   shapePooler: {fileID: 1965581471}
 --- !u!4 &1965581473
 Transform:
