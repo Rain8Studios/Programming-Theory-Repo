@@ -3,25 +3,41 @@ using UnityEngine;
 
 public abstract class Shape : MonoBehaviour
 {
-    public string ShapeName;
-    public float Score;
+    // use this for random target generation in Main Manager
+    public enum Shapes
+    {
+        Square,
+        Circle,
+        Triangle
+    }
+
+    [SerializeField] private ParticleSystem particles;
+    [SerializeField] private ScreenShake shakeCamera;
+
+    public string ShapeName { get; protected set; }
+    public float Score { get; protected set; }
+
+    protected Color color;
 
     private float sizeModifier;
 
     private void Awake()
     {
         InitSetup();
+        shakeCamera = FindObjectOfType<ScreenShake>();
     }
 
     protected abstract void SetName();
 
+    // can be white, override shapes used in this project so they can't be a color too close to the color of the board
     protected virtual void GenerateColor()
     {
-        Color newColor = new Color(Random.value, Random.value, Random.value, 1.0f);
-        GetComponent<Renderer>().material.color = newColor;
+        color = new Color(Random.value, Random.value, Random.value, 1.0f);
+        GetComponent<Renderer>().material.color = color;
     }
 
-    protected void InitSetup()
+    // triangles need to be set up in a different way
+    protected virtual void InitSetup()
     {
         SetName();
         SetScore();
@@ -44,8 +60,20 @@ public abstract class Shape : MonoBehaviour
     {
         if (!MainManager.SharedInstance.GameOver)
         {
-            MainManager.SharedInstance.AddScore(Score);
-            MainUIManager.SharedInstance.AddTime(1);
+            if (MainManager.SharedInstance.target.ToString() == this.ShapeName)
+            {
+                ParticleSystem.MainModule p_main = particles.main;
+                p_main.startColor = color;
+                Instantiate(particles, transform.position, particles.transform.rotation);
+                MainManager.SharedInstance.AddScore(Score);
+                MainUIManager.SharedInstance.AddTime(3);
+            } else
+            {
+                shakeCamera.TriggerShake(0.7f);
+                MainManager.SharedInstance.AddScore(-Score);
+                MainUIManager.SharedInstance.AddTime(-1);
+            }
+            
             gameObject.SetActive(false);
         }
     }

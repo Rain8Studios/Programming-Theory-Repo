@@ -87,6 +87,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f16ddd6b08c57e4893e377a17b45f1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  particles: {fileID: 5389357876804258009, guid: c74cf38d3f9a62147b6332a680401580, type: 3}
   ShapeName: 
   Score: 0
 --- !u!33 &3143949728274503156

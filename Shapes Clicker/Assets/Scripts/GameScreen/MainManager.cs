@@ -5,10 +5,13 @@ using UnityEngine;
 public class MainManager : MonoBehaviour
 {
     public static MainManager SharedInstance;
-
-    public GameObject Board;
+    
     public bool GameOver { get; private set; }
+    public Shape.Shapes target { get; private set; }
 
+    [SerializeField] private ShapePooler shapePooler;
+
+    private float targetDelay = 10f; // delay between changing targets
     private float minX = -3.15f;
     private float maxX = 2.9f;
     private float minY = -2.66f;
@@ -20,6 +23,7 @@ public class MainManager : MonoBehaviour
     {
         SharedInstance = this;
         StartCoroutine(TriggerShapeSpawner());
+        GenerateRandomTarget();
     }
 
     private IEnumerator TriggerShapeSpawner()
@@ -34,7 +38,7 @@ public class MainManager : MonoBehaviour
 
     private void SpawnShape()
     {
-        Shape shapeToSpawn = ShapePooler.SharedInstance.GetPooledObject();
+        Shape shapeToSpawn = shapePooler.GetPooledObject();
         if (shapeToSpawn != null) // pooler is not full
         {
             shapeToSpawn.Spawn(new Vector3(Random.Range(minX, maxX), Random.Range(minY, maxY), 0));
@@ -63,11 +67,28 @@ public class MainManager : MonoBehaviour
 
     private void UpdateLevel()
     {
-        if (currentLevel < 1 + (Mathf.FloorToInt(currentScore) / 200))
+        if (currentLevel < 1 + (Mathf.FloorToInt(currentScore) / 60))
         {
             currentLevel++;
             Time.timeScale += 0.2f;
             MainUIManager.SharedInstance.UpdateLevel(currentLevel);
+        }
+    }
+
+    private void GenerateRandomTarget()
+    {
+        target = (Shape.Shapes)Random.Range(0, System.Enum.GetNames(typeof(Shape.Shapes)).Length);
+        MainUIManager.SharedInstance.UpdateTargetName();
+        MainUIManager.SharedInstance.UpdateTargetImage(target);
+        StartCoroutine(TriggerTargetDelay());
+    }
+
+    private IEnumerator TriggerTargetDelay()
+    {
+        yield return new WaitForSeconds(targetDelay);
+        if (!GameOver)
+        {
+            GenerateRandomTarget();
         }
     }
 }

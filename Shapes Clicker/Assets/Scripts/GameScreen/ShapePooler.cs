@@ -4,17 +4,11 @@ using UnityEngine;
 
 public class ShapePooler: MonoBehaviour
 {
-    public static ShapePooler SharedInstance;
-    public List<Shape> PooledShapes;
-    public Shape[] ShapesToPool;
-    public int AmountToPool;
+    [SerializeField] private Shape[] ShapesToPool;
+    [SerializeField] private int AmountToPool;
 
+    private List<Shape> PooledShapes;
     private int currentIndex;
-
-    void Awake()
-    {
-        SharedInstance = this;
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +19,7 @@ public class ShapePooler: MonoBehaviour
         PooledShapes = new List<Shape>();
         for (int i = 0; i < AmountToPool; i++)
         {
-            Shape shp = (Shape)Instantiate(ShapesToPool[Random.Range(0, ShapesToPool.Length)]);
+            Shape shp = Instantiate(ShapesToPool[Random.Range(0, ShapesToPool.Length)]);
             shp.gameObject.SetActive(false);
             PooledShapes.Add(shp);
             shp.transform.SetParent(this.transform); // set as children of Main Manager
@@ -50,7 +44,7 @@ public class ShapePooler: MonoBehaviour
         if (poolFull) return null;
         else
         {
-            // there must be an inactive object after first check
+            // there must be an inactive object after the first check
             while (true)
             {
                 if (currentIndex < PooledShapes.Count - 1)

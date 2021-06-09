@@ -9,10 +9,16 @@ public class MainUIManager : MonoBehaviour
     public static MainUIManager SharedInstance;
 
     public GameObject gameOverScreen;
-    public Text currentScoreText;
-    public Text bestScoreText;
-    public Text levelText;
-    public Slider timerSlider;
+
+    [SerializeField] private Text currentScoreText;
+    [SerializeField] private Text bestScoreText;
+    [SerializeField] private Text levelText;
+    [SerializeField] private Text targetName;
+    [SerializeField] private Image targetImage;
+    [SerializeField] private Sprite squareSprite;
+    [SerializeField] private Sprite circleSprite;
+    [SerializeField] private Sprite triangleSprite;
+    [SerializeField] private Slider timerSlider;
 
     private float maxTime;
     private float timeLeft;
@@ -20,15 +26,13 @@ public class MainUIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        maxTime = 30.0f;
-        timeLeft = maxTime;
-        timerSlider.maxValue = maxTime;
+        SetMaxTime(30.0f);
         UpdateCurrentScore(0);
         UpdateLevel(1);
         UpdateBestScore();
     }
 
-    private void Awake()
+    void Awake()
     {
         SharedInstance = this;
     }
@@ -44,6 +48,13 @@ public class MainUIManager : MonoBehaviour
         {
             MainManager.SharedInstance.TriggerGameOver();
         }
+    }
+
+    public void SetMaxTime(float maxTimeToSet)
+    {
+        maxTime = maxTimeToSet;
+        timeLeft = maxTime;
+        timerSlider.maxValue = maxTime;
     }
 
     public void AddTime(float timeToAdd)
@@ -65,6 +76,28 @@ public class MainUIManager : MonoBehaviour
     public void UpdateLevel(int level)
     {
         levelText.text = $"Level: {Mathf.FloorToInt(level)}";
+    }
+
+    public void UpdateTargetName()
+    {
+        
+        targetName.text = MainManager.SharedInstance.target.ToString();
+    }
+
+    public void UpdateTargetImage(Shape.Shapes shape)
+    {
+        switch (shape)
+        {
+            case Shape.Shapes.Square:
+                targetImage.sprite = squareSprite;
+                break;
+            case Shape.Shapes.Circle:
+                targetImage.sprite = circleSprite;
+                break;
+            case Shape.Shapes.Triangle:
+                targetImage.sprite = triangleSprite;
+                break;
+        }
     }
 
     public void Restart()

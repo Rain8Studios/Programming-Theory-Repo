@@ -11,7 +11,7 @@ public class Square : Shape
 
     protected override void GenerateColor()
     {
-        Color newColor = new Color(0, Random.value, Random.value, 1.0f);
-        GetComponent<Renderer>().material.color = newColor;
+        color = new Color(0, Random.value, Random.value, 1.0f);
+        GetComponent<Renderer>().material.color = color;
     }
 }

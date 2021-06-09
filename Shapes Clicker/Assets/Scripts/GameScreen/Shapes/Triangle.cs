@@ -8,8 +8,18 @@ public class Triangle : Shape
     private MeshFilter mf;
     private MeshCollider mcol;
 
-    // Use this for initialization
-    void Awake()
+    protected override void SetName()
+    {
+        ShapeName = "Triangle";
+    }
+
+    protected override void GenerateColor()
+    {
+        color = new Color(Random.value, 0, Random.value, 1.0f);
+        GetComponent<Renderer>().material.color = color;
+    }
+
+    protected override void InitSetup()
     {
         mf = GetComponent<MeshFilter>();
         mcol = GetComponent<MeshCollider>();
@@ -17,11 +27,13 @@ public class Triangle : Shape
         mf.mesh = m;
         drawTriangle();
 
-        InitSetup();
+        SetName();
+        SetScore();
+        GenerateColor();
     }
 
     //This draws a triangle
-    void drawTriangle()
+    private void drawTriangle()
     {
         //We need two arrays one to hold the vertices and one to hold the triangles
         Vector3[] VerteicesArray = new Vector3[3];
@@ -43,16 +55,5 @@ public class Triangle : Shape
         mcol.sharedMesh = m;
 
         transform.Rotate(new Vector3(0, 180, 0));
-    }
-
-    protected override void SetName()
-    {
-        ShapeName = "Triangle";
-    }
-
-    protected override void GenerateColor()
-    {
-        Color newColor = new Color(Random.value, 0, Random.value, 1.0f);
-        GetComponent<Renderer>().material.color = newColor;
     }
 }
